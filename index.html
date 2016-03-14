@@ -1,0 +1,119 @@
+<!doctype HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>수능카운터</title>
+	<script src="https://0101010101.com/common/jquery2.js"></script>
+	<script>
+	$(document).ready(function() {
+		if ($(window).width() <= 700) {
+			$("#main").css('transform', 'rotate(-' + ((700-$(window).width())*(75/400)) + 'deg)');
+		}
+
+		var inittime = 1479339600000;
+		var date = new Date(), date2, date3;
+		var first = date.getTime();
+		var refresh = function() {
+			date2 = new Date();
+			var time_tmp = inittime - date2.getTime();
+			date = new Date(time_tmp + 3600 * 15 * 1000);
+			$("#display1").html(((0|time_tmp / 86400000) + 'D ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + (0|date.getMilliseconds() / 100) + ' <span class="c1">Left</span>').replace(/([^c][0-9]+)/g, '<span class="c3">$1</span>').replace(/:/g, '<span class="c2">:</span>').replace(/([+\-().])/g, '<span class="c4">$1</span>'));
+			$("#display2").html(('Now: ' + date2.getFullYear() + '-' + (date2.getMonth()+1) + '-' + date2.getDate() + ' ' + date2.getHours() + ':' + date2.getMinutes() + ':' + date2.getSeconds() + '.' + (0|date2.getMilliseconds() / 100) + ' (GMT +0900)').replace(/([^c][0-9]+)/g, '<span class="c3">$1</span>').replace(/:/g, '<span class="c2">:</span>').replace(/([+\-().])/g, '<span class="c4">$1</span>'));		
+			
+		};
+		setInterval(refresh, 100);
+		refresh();
+	});
+	</script>
+	<style type="text/css">
+	body {
+		background-color: #272822;
+		overflow: hidden;
+		position: fixed;
+		width: 200%;
+		left: -50%;
+		height: 100%;
+	}
+	#main {
+		position: fixed;
+		width: 200%;
+		height: 100%;
+	}
+	#display1 {
+		position: absolute;
+		top: calc(50% - 160px);
+		width: 100%;
+		left: 0;
+		font-family: 'Menlo', 'Monaco', 'Consolas', 'Lucida Console';
+		text-align: center;
+		font-size: 77px;
+		color: white;
+	}
+	#display2 {
+		position: relative;
+		top: calc(50% - 20px);
+		width: 100%;
+		left: 0;
+		color: white;
+		font-family: 'Menlo', 'Monaco', 'Consolas', 'Lucida Console';
+		text-align: center;
+		font-size: 40px;
+	}
+	#links {
+		position: relative;
+		top: calc(100% - 100px);
+		width: 100%;
+		left: 0;
+		color: white;
+		font-family: 'Menlo', 'Monaco', 'Consolas', 'Lucida Console';
+		text-align: center;
+		font-size: 14px;
+	}
+	@media screen and (max-width: 960px) {
+		#display1 {
+			font-size: 53px;
+			top: calc(50% - 110px);
+		}
+		#display2 {
+			font-size: 28px;
+			top: calc(50% - 10px);
+		}
+	}
+	@media screen and (max-width: 768px) {
+		#display1 {
+			font-size: 42px;
+			top: calc(50% - 90px);
+		}
+		#display2 {
+			font-size: 20px;
+			top: calc(50% - 5px);
+		}
+	}
+	.c1 {
+		color: #F92672;
+		font-weight: 600;
+	}
+	.c2 {
+		color: #E6DB74;
+	}
+	.c3 {
+		color: #AE81FF;
+	}
+	.c4 {
+		color: #66D9EF;
+	}
+	.link {
+		text-decoration: none;
+		color: #E6DB74;
+	}
+	</style>
+</head>
+<body>
+	<div id="main">
+		<p id="display1"></p>
+		<p id="display2"></p>
+	</div>
+	<p id="links"><a class="link" href="index.html">2017</a>&nbsp;<a class="link" href="2018.html">2018</a>&nbsp;<a class="link" href="2019.html">2019</a></p>
+</body>
+</html>
