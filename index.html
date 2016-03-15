@@ -6,25 +6,51 @@
 	<title>수능카운터</title>
 	<script src="https://0101010101.com/common/jquery2.js"></script>
 	<script>
-	$(document).ready(function() {
+	var load = function(y=0) {
+		try{
+			clearInterval(interval);
+		} catch(e) {}
 		if ($(window).width() <= 700) {
 			$("#main").css('transform', 'rotate(-' + ((700-$(window).width())*(75/400)) + 'deg)');
 		}
 
-		var inittime = 1479339600000;
-		var date = new Date(), date2, date3;
-		var first = date.getTime();
+		year = parseInt(y) || +(/[0-9]+/.exec(window.location.hash)) || ((new Date).getFullYear()+1);
+		var inittime = new Date(year-1, 10, 1, 8, 40, 0);
+		inittime = new Date(86400 * 1000 * 7 + inittime.getTime());
+		inittime = new Date(inittime.getTime() + 86400 * 1000 * (7 - inittime.getDay() + 4));
+		$('#left').attr('href', '#' + (year-1));
+		$('#now').attr('href', '#' + year);
+		$('#right').attr('href', '#' + (year+1));
+		$('#left').html(year-1);
+		$('#now').html(year);
+		$('#right').html(year+1);
+
+		$("#display3").html(('KSAT: ' + inittime.getFullYear() + '-' + (inittime.getMonth()+1) + '-' + inittime.getDate() + ' ' + inittime.getHours() + ':' + inittime.getMinutes() + ':' + inittime.getSeconds() + '.' + (0|inittime.getMilliseconds() / 100) + ' (GMT +0900)').replace(/([^c][0-9]+)/g, '<span class="c3">$1</span>').replace(/:/g, '<span class="c2">:</span>').replace(/([+\-().])/g, '<span class="c4">$1</span>'));
+
 		var refresh = function() {
 			date2 = new Date();
 			var time_tmp = inittime - date2.getTime();
 			date = new Date(time_tmp + 3600 * 15 * 1000);
-			$("#display1").html(((0|time_tmp / 86400000) + 'D ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + (0|date.getMilliseconds() / 100) + ' <span class="c1">Left</span>').replace(/([^c][0-9]+)/g, '<span class="c3">$1</span>').replace(/:/g, '<span class="c2">:</span>').replace(/([+\-().])/g, '<span class="c4">$1</span>'));
-			$("#display2").html(('Now: ' + date2.getFullYear() + '-' + (date2.getMonth()+1) + '-' + date2.getDate() + ' ' + date2.getHours() + ':' + date2.getMinutes() + ':' + date2.getSeconds() + '.' + (0|date2.getMilliseconds() / 100) + ' (GMT +0900)').replace(/([^c][0-9]+)/g, '<span class="c3">$1</span>').replace(/:/g, '<span class="c2">:</span>').replace(/([+\-().])/g, '<span class="c4">$1</span>'));		
-			
+			$("#display1").html((Math.abs(0|time_tmp / 86400000) + 'D ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + (0|date.getMilliseconds() / 100) + ' <span class="c1">' + (time_tmp<0?'Elapsed':'Left') + '</span>').replace(/([^c][0-9]+)/g, '<span class="c3">$1</span>').replace(/:/g, '<span class="c2">:</span>').replace(/([+\-().])/g, '<span class="c4">$1</span>'));
+			$("#display2").html(('Now: ' + date2.getFullYear() + '-' + (date2.getMonth()+1) + '-' + date2.getDate() + ' ' + date2.getHours() + ':' + date2.getMinutes() + ':' + date2.getSeconds() + '.' + (0|date2.getMilliseconds() / 100) + ' (GMT +0900)').replace(/([^c][0-9]+)/g, '<span class="c3">$1</span>').replace(/:/g, '<span class="c2">:</span>').replace(/([+\-().])/g, '<span class="c4">$1</span>'));
 		};
-		setInterval(refresh, 100);
+
+		var date = new Date(), date2, date3;
+		var first = date.getTime();
+		interval = setInterval(refresh, 100);
 		refresh();
-	});
+
+		/*(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&appId=124141431313053&version=v2.0";
+		fjs.parentNode.insertBefore(js, fjs);
+		}(document, "script", "facebook-jssdk"));*/
+		window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
+	}
+
+	$(document).ready(load);
 	</script>
 	<style type="text/css">
 	body {
@@ -42,7 +68,7 @@
 	}
 	#display1 {
 		position: absolute;
-		top: calc(50% - 160px);
+		top: calc(50% - 200px);
 		width: 100%;
 		left: 0;
 		font-family: 'Menlo', 'Monaco', 'Consolas', 'Lucida Console';
@@ -52,7 +78,17 @@
 	}
 	#display2 {
 		position: relative;
-		top: calc(50% - 20px);
+		top: calc(50% - 55px);
+		width: 100%;
+		left: 0;
+		color: white;
+		font-family: 'Menlo', 'Monaco', 'Consolas', 'Lucida Console';
+		text-align: center;
+		font-size: 40px;
+	}
+	#display3 {
+		position: relative;
+		top: calc(50% - 80px);
 		width: 100%;
 		left: 0;
 		color: white;
@@ -70,24 +106,42 @@
 		text-align: center;
 		font-size: 14px;
 	}
+	#share {
+		position: relative;
+		top: calc(100% - 100px);
+		width: 100%;
+		left: 0;
+		color: white;
+		font-family: 'Menlo', 'Monaco', 'Consolas', 'Lucida Console';
+		text-align: center;
+		font-size: 14px;
+	}
 	@media screen and (max-width: 960px) {
 		#display1 {
 			font-size: 53px;
-			top: calc(50% - 110px);
+			top: calc(50% - 140px);
 		}
 		#display2 {
 			font-size: 28px;
-			top: calc(50% - 10px);
+			top: calc(50% - 40px);
+		}
+		#display3 {
+			font-size: 28px;
+			top: calc(50% - 60px);
 		}
 	}
 	@media screen and (max-width: 768px) {
 		#display1 {
-			font-size: 42px;
+			font-size: 34px;
 			top: calc(50% - 90px);
 		}
 		#display2 {
-			font-size: 20px;
-			top: calc(50% - 5px);
+			font-size: 18px;
+			top: calc(50% - 30px);
+		}
+		#display3 {
+			font-size: 18px;
+			top: calc(50% - 40px);
 		}
 	}
 	.c1 {
@@ -113,7 +167,9 @@
 	<div id="main">
 		<p id="display1"></p>
 		<p id="display2"></p>
+		<p id="display3"></p>
 	</div>
-	<p id="links"><a class="link" href="index.html">2017</a>&nbsp;<a class="link" href="2018.html">2018</a>&nbsp;<a class="link" href="2019.html">2019</a></p>
+	<p id="links"><a id="left" class="link" href="#" onclick="load(year-1);"></a>&nbsp;<a id="now" class="link" href="#" onclick="load(year);"></a>&nbsp;<a id="right" class="link" href="#" onclick="load(year+1);"></a></p>
+	<p id="share"><!--<div id="fb-root"></div><div class="fb-like" data-share="true" data-width="450" data-show-faces="true"></div>--><a class="twitter-share-button" href="https://twitter.com/share">Tweet</a></p>
 </body>
 </html>
