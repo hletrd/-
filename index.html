@@ -6,14 +6,14 @@
 	<title>수능카운터</title>
 	<script src="https://0101010101.com/common/jquery2.js"></script>
 	<script>
-	var load = function(y=0) {
+	var load = function(y) {
 		try{
 			clearInterval(interval);
 		} catch(e) {}
 		if ($(window).width() <= 700) {
 			$("#main").css('transform', 'rotate(-' + ((700-$(window).width())*(75/400)) + 'deg)');
 		}
-
+		y = y || 0;
 		year = parseInt(y) || +(/[0-9]+/.exec(window.location.hash)) || ((new Date).getFullYear()+1);
 		var inittime = new Date(year-1, 10, 1, 8, 40, 0);
 		inittime = new Date(86400 * 1000 * 7 + inittime.getTime());
